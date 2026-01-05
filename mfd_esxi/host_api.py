@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """ESXi host support for API/pyvmomi."""
+
 import logging
 from atexit import register as exit_register
 from OpenSSL.crypto import load_certificate, FILETYPE_PEM

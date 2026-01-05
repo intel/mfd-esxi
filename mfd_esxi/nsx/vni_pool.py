@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """NSX VNI Pool."""
+
 import random
 from com.vmware.nsx_policy.model_client import VniPoolConfig
 

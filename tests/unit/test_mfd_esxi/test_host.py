@@ -12,6 +12,7 @@ from mfd_network_adapter.network_interface.feature.virtualization.data_structure
     VFInfo,
 )
 from mfd_esxi.exceptions import ESXiRuntimeError
+from mfd_esxi.exceptions import ESXiNotFound
 from mfd_esxi.host import IntnetCliVersion
 from mfd_connect import RPyCConnection
 from mfd_typing import OSName, PCIAddress
@@ -20,6 +21,12 @@ from mfd_typing.network_interface import InterfaceInfo
 
 
 class TestESXiHypervisor:
+    class _DummyDVSwitch:
+        def __init__(self, name: str, uplinks: dict[str, str], portgroups: list[str]):
+            self.name = name
+            self.uplinks = uplinks
+            self.portgroups = portgroups
+
     @pytest.fixture()
     def interface(self, mocker):
         pci_address = PCIAddress(0, 1, 0, 1)
@@ -33,6 +40,35 @@ class TestESXiHypervisor:
         )
         mocker.stopall()
         return interface
+
+    def test_find_dswitch(self, host):
+        d1 = self._DummyDVSwitch(
+            name="DSwitch_001",
+            uplinks={"uplink1": "vmnic0"},
+            portgroups=["PG1", "MGMT"],
+        )
+        d2 = self._DummyDVSwitch(
+            name="DSwitch_002",
+            uplinks={"uplink2": "vmnic4"},
+            portgroups=["PG2"],
+        )
+        host.dswitch = [d1, d2]
+
+        assert host.find_dswitch(name="DSwitch_002") is d2
+        assert host.find_dswitch(uplink="vmnic4") is d2
+        assert host.find_dswitch(portgroup="MGMT") is d1
+
+    def test_find_dswitch_not_found_raises(self, host):
+        host.dswitch = [
+            self._DummyDVSwitch(
+                name="DSwitch_001",
+                uplinks={"uplink1": "vmnic0"},
+                portgroups=["PG1"],
+            )
+        ]
+
+        with pytest.raises(ESXiNotFound, match=r"Could not find desired DSwitch"):
+            host.find_dswitch(name="missing")
 
     def test_initialize_version(self, host):
         host.connection.execute_command.return_value = ConnectionCompletedProcess(

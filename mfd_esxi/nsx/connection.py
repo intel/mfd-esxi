@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """Connection to NSX."""
+
 import requests
 from packaging.version import Version, parse
 from com.vmware import nsx_policy_client, nsx_client

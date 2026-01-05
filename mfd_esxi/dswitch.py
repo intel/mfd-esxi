@@ -358,9 +358,7 @@ class ESXiDVSwitch:
                 f"-p {name} -dvs {self.name}"
             )
         else:
-            command = (
-                f"LC_ALL=en_US.UTF-8 nsxdp-cli vswitch vlan policy set --guest-tagging -p {name} -dvs {self.name}"
-            )
+            command = f"LC_ALL=en_US.UTF-8 nsxdp-cli vswitch vlan policy set --guest-tagging -p {name} -dvs {self.name}"
         self.owner.execute_command(command, shell=True)
 
     def add_vmknic(self, port_name: str, ip: IPv4Interface | IPv6Interface, mtu: int = 1500) -> Vmknic:

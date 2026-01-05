@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: MIT
 # pylint: disable=protected-access
 """VirtualAdapter wrapper."""
+
 import logging
 from pyVmomi import vim
 from typing import Union, TYPE_CHECKING

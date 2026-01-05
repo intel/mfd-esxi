@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: MIT
 # pylint: disable=protected-access
 """Datacenter wrapper."""
+
 import logging
 from typing import Any, Generator, Iterable, TYPE_CHECKING
 

@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """VSwitch wrapper."""
+
 import logging
 from typing import Union, Any, Generator, Dict, Set, TYPE_CHECKING
 from pyVmomi import vim

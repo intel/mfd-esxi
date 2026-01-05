@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
-from .fixtures import (
+
+from .fixtures import (  # noqa
     host,
     host_esxcfg_vswitch_1,
     host_esxcfg_vswitch_2,

@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """VirtualMachine wrapper."""
+
 import logging
 from typing import Optional, Any, Generator, Union, TYPE_CHECKING
 from pyVmomi import vim

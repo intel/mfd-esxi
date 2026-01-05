@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """NSX Uplink Profile."""
+
 from com.vmware.nsx_policy.model_client import (
     PolicyUplinkHostSwitchProfile,
     TeamingPolicy,

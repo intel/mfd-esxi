@@ -295,36 +295,6 @@ def vcenter_named_entities():
 
 
 @pytest.fixture()
-def host_api(mocker, monkeypatch):
-    host_api = ESXiHostAPI("172.31.0.56", "root", "secret")
-    host_api_content = mocker.create_autospec(vim.ServiceInstanceContent)
-    host_api._ESXiHostAPI__content = host_api_content
-    host_api._ESXiHostAPI__service = True
-    return host_api
-
-
-@pytest.fixture()
-def host_api_with_cert(mocker, host_api):
-    host_api._ESXiHostAPI__content.rootFolder = object()
-    host_api._ESXiHostAPI__content.sessionManager = mocker.create_autospec(vim.SessionManager)
-    host_api._ESXiHostAPI__content.sessionManager.currentSession = True
-    host_api._service = True
-    fake_host_config = mocker.create_autospec(vim.host.ConfigInfo)
-    fake_host_config.certificate = hostapi_cert_bytes
-
-    fake_host = mocker.create_autospec(vim.HostSystem)
-    fake_host.config = fake_host_config
-
-    fake_view = mocker.create_autospec(vim.view.ContainerView)
-    fake_view.view = [fake_host]
-
-    host_api._ESXiHostAPI__content.viewManager = mocker.create_autospec(vim.view.ViewManager)
-    host_api._ESXiHostAPI__content.viewManager.CreateContainerView = lambda x, y, z: fake_view
-
-    return host_api
-
-
-@pytest.fixture()
 def host_api_with_vf_info_and_interfaces(mocker, host_api):
     pci_addresses = [PCIAddress(0, 0, 0, 0), PCIAddress(0, 0, 0, 1)]
     names = ["vmnic4", "vmnic5"]
@@ -492,7 +462,7 @@ esxcfg_vmknic_1 = dedent(
     vmk0       Management Network                      IPv6      fe80::4adf:37ff:fe07:1f14               64                              48:df:37:aa:bb:cc 1500    65535     true    STATIC, PREFERRED   defaultTcpipStack
     vmk1       ATvmnic10                             IPv4      1.1.1.1                                 255.0.0.0       1.255.255.255   00:50:56:aa:bb:cc 1500    65535     true    STATIC              defaultTcpipStack
     vmk1       ATvmnic10                             IPv6      fe80::250:56ff:fe66:5642                64                              00:50:56:aa:bb:cc 1500    65535     true    STATIC, PREFERRED   defaultTcpipStack
-"""
+"""  # noqa: E501
 )
 
 esxcfg_vmknic_2 = dedent(
@@ -504,7 +474,7 @@ esxcfg_vmknic_2 = dedent(
     vmk1       ATvmnic10                             IPv6      fe80::250:56ff:fe66:5642                64                              00:50:56:aa:bb:cc 1500    65535     true    STATIC, PREFERRED   defaultTcpipStack
     vmk2       PGvmnic0                                IPv4      N/A                                     N/A             N/A             00:50:56:aa:bb:cc 9000    65535     true    NONE                defaultTcpipStack
     vmk2       PGvmnic0                                IPv6      fe80::250:56ff:fe63:a0ef                64                              00:50:56:aa:bb:cc 9000    65535     true    STATIC, PREFERRED   defaultTcpipStack
-"""
+"""  # noqa: E501
 )
 
 esxcfg_vmknic_3 = dedent(
@@ -525,7 +495,7 @@ esxcfg_vmknic_3 = dedent(
     vmk12      90e27848-f8d1-4df0-ace1-23d78ce5d85d    IPv6      fe80::250:56ff:fe64:28bd                64                              00:50:aa:bb:cc:bd 1700    65535     true    STATIC, PREFERRED   vxlan        
     vmk12      90e27848-f8d1-4df0-ace1-23d78ce5d85d    IPv6      3001:1::1:1:1                           64                              00:50:aa:bb:cc:bd 1700    65535     true    STATIC, PREFERRED   vxlan             
     vmk50      b8200bd5-c046-40f8-8caa-86647c65dda6    IPv4      8.1.1.1                                 255.0.0.0       8.255.255.255   00:50:aa:bb:cc:30 1700    65535     true    STATIC              hyperbus     
-"""
+"""  # noqa: E501, W291
 )
 
 esxcfg_vmknic_4 = dedent(
@@ -533,7 +503,7 @@ esxcfg_vmknic_4 = dedent(
     Interface  Port Group/DVPort/Opaque Network        IP Family IP Address                              Netmask         Broadcast       MAC Address       MTU     TSO MSS   Enabled Type                NetStack
     vmk0       PGvmnic0                                IPv4      20.20.20.1                              255.0.0.0                            255.255.0.0     172.31.255.255  00:50:aa:bb:cc:bd 1500    65535     true    DHCP                defaultTcpipStack
     vmk0       PGvmnic0                                IPv6      fe80::b27b:25ff:fede:7484               64                              00:50:aa:bb:cc:bd 1500    65535     true    STATIC, PREFERRED   defaultTcpipStack
-"""
+"""  # noqa: E501
 )
 
 esxcfg_nics_1 = dedent(
@@ -555,7 +525,7 @@ esxcfg_nics_1 = dedent(
     vmnic7  0000:31:00.3 igbn        Down 0Mbps      Half   48:df:37:aa:bb:cf 1500   Intel(R) I350 Gigabit Network Connection
     vmnic8  0000:b1:00.0 ixgben      Up   10000Mbps  Full   90:e2:aa:bb:cc:34 1500   Intel(R) 82599 10 Gigabit Dual Port Network Connection
     vmnic9  0000:b1:00.1 ixgben      Up   10000Mbps  Full   90:e2:aa:bb:cc:35 1500   Intel(R) 82599 10 Gigabit Dual Port Network Connection
-"""
+"""  # noqa: E501
 )
 
 esxcfg_nics_2 = dedent(
@@ -565,7 +535,7 @@ esxcfg_nics_2 = dedent(
     vmnic1  0000:e1:00.1 ntg3        Down 0Mbps      Half   70:b5:aa:bb:cc:cf 1500   Broadcom Corporation NetXtreme BCM5720 Gigabit Ethernet
     vmnic2  0000:24:00.0 icen        Down 100000Mbps Full   b4:96:aa:bb:cc:f8 1500   Intel(R) Ethernet Controller E810-C for QSFP
     vmnic3  0000:21:00.0 icen        Up   100000Mbps Full   b4:96:aa:bb:cc:fc 1500   Intel(R) Ethernet Controller E810-C for QSFP
-"""
+"""  # noqa: E501
 )
 
 net_dvs_lcores_1 = dedent(
@@ -695,7 +665,7 @@ primary_vmdk = dedent(
     ddb.encoding = "UTF-8"
     ddb.grain = "8"
     ddb.longContentID = "f6371048ed90dd02a7e9ded6fffffffe"
-"""
+"""  # noqa: W293
 )
 
 parent_vmdk = dedent(
@@ -722,7 +692,7 @@ parent_vmdk = dedent(
     ddb.thinProvisioned = "1"
     ddb.uuid = "60 00 C2 9f 9a b0 9b 9c-13 55 b8 11 fd 2c 92 9b"
     ddb.virtualHWVersion = "6"
-"""
+"""  # noqa: W293
 )
 
 getallvms = dedent(
