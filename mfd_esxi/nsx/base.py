@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """Basic building blocks for more advanced classes."""
+
 from abc import abstractmethod, ABC
 from typing import Optional
 

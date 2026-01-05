@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """DSPorgroup wrapper."""
+
 import logging
 from typing import List, Union, Dict, Tuple
 
@@ -188,9 +189,7 @@ class DSPortgroup(object):
         """
         uplink_port_order = self.content.config.defaultPortConfig.uplinkTeamingPolicy.uplinkPortOrder
         return {
-            "active": [
-                uplink for uplink in self._dswitch.uplinks if uplink.name in uplink_port_order.activeUplinkPort
-            ],
+            "active": [uplink for uplink in self._dswitch.uplinks if uplink.name in uplink_port_order.activeUplinkPort],
             "standby": [
                 uplink for uplink in self._dswitch.uplinks if uplink.name in uplink_port_order.standbyUplinkPort
             ],

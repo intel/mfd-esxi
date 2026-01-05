@@ -241,7 +241,7 @@ class ESXiHypervisor:
         for dswitch in self.dswitch:
             if name == dswitch.name or uplink in dswitch.uplinks.values() or portgroup in dswitch.portgroups:
                 return dswitch
-        raise ESXiNotFound(f"Could not find desired DSwitch")
+        raise ESXiNotFound("Could not find desired DSwitch")
 
     def add_vmknic(self, portgroup: str, mtu: int = None, mac: "MACAddress" = None) -> "Vmknic":
         """

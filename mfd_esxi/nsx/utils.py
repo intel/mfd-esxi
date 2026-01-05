@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """NSX utilities."""
+
 import logging
 
 from urllib3.exceptions import ProtocolError
@@ -65,7 +66,7 @@ def api_call(call: Callable) -> Callable:
                     logger.log(
                         level=log_levels.MODULE_DEBUG,
                         msg=f"Connection error detected, waiting {sleep_between_tries} seconds and "
-                            f"trying again ({i}/{num_of_retries}).",
+                        f"trying again ({i}/{num_of_retries}).",
                     )
                     sleep(sleep_between_tries)
                     return call(*args, **kwargs)

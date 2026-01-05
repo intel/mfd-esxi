@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """DSUplink wrapper."""
+
 import logging
 from typing import Dict, Union, Optional
 from pyVmomi import vim

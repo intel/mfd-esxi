@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """DSwitch wrapper."""
+
 import logging
 from pyVmomi import vim
 from typing import Iterator, Optional, Union, Any, Generator, List, TYPE_CHECKING
@@ -183,9 +184,7 @@ class DSwitch(object):
     @property
     def uplinks(self) -> Generator["DSUplink", Any, None]:
         """Get all uplinks."""
-        return (
-            DSUplink(name, nr, self) for nr, name in enumerate(self.content.config.uplinkPortPolicy.uplinkPortName)
-        )
+        return (DSUplink(name, nr, self) for nr, name in enumerate(self.content.config.uplinkPortPolicy.uplinkPortName))
 
     def get_uplink(self, name: str) -> "DSUplink":
         """
@@ -299,9 +298,7 @@ class DSwitch(object):
         """
         ds_spec = self.get_ds_config_spec()
         ds_spec.defaultPortConfig = vim.dvs.VmwareDistributedVirtualSwitch.VmwarePortConfigPolicy()
-        ds_spec.defaultPortConfig.uplinkTeamingPolicy = (
-            vim.dvs.VmwareDistributedVirtualSwitch.UplinkPortTeamingPolicy()
-        )
+        ds_spec.defaultPortConfig.uplinkTeamingPolicy = vim.dvs.VmwareDistributedVirtualSwitch.UplinkPortTeamingPolicy()
         ds_spec.defaultPortConfig.uplinkTeamingPolicy.uplinkPortOrder = (
             vim.dvs.VmwareDistributedVirtualSwitch.UplinkPortOrderPolicy()
         )

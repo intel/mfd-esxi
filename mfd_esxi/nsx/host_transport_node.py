@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """NSX Host Transport Node."""
+
 from time import sleep, time
 from typing import List
 

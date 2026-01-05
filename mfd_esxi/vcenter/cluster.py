@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 """Cluster wrapper."""
+
 import logging
 from packaging.version import parse as version_parse
 from typing import Any, Generator, TYPE_CHECKING
@@ -72,8 +73,7 @@ class Cluster(object):
     def hosts(self) -> Generator["Host", Any, None]:
         """Get all hosts from cluster."""
         return (
-            Host(host.name, self._datacenter, self)
-            for host in self.vcenter.create_view(self.content, [vim.HostSystem])
+            Host(host.name, self._datacenter, self) for host in self.vcenter.create_view(self.content, [vim.HostSystem])
         )
 
     def get_host_by_ip(self, ip: str) -> "Host":

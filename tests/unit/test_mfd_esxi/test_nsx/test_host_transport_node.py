@@ -23,7 +23,6 @@ class TestHostTransportNode:
         mocker.stopall()
 
     def test_add_switch_with_uplink_param(self, host_transport_node, mocker):
-
         vds_id = "test"
         mock_standard_host_switch = mocker.patch("mfd_esxi.nsx.host_transport_node.StandardHostSwitch", autospec=True)
         host_transport_node.add_switch(

@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """VCenter wrapper."""
+
 import logging
 from itertools import chain
 from http.client import HTTPException
@@ -100,7 +101,7 @@ class VCenter:
                                 else:
                                     continue
 
-                                if not str(task) in task_list:
+                                if str(task) not in task_list:
                                     continue
 
                                 if state == vim.TaskInfo.State.success:

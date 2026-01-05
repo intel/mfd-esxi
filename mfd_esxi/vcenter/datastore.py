@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """Datastore wrapper."""
+
 import logging
 from typing import Any, Generator, TYPE_CHECKING
 from pyVmomi import vim

@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 """VCenter specific exceptions."""
+
 from typing import Any
 
 

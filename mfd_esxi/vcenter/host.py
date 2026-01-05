@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """Host wrapper."""
+
 import logging
 from typing import Optional, Any, Generator, TYPE_CHECKING
 from pyVmomi import vim

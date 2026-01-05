@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """NSX IP Pool."""
+
 from time import sleep, time
 
 from com.vmware.nsx_policy.model_client import (
