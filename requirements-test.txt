@@ -1,7 +1,7 @@
 -r requirements.txt
 
 pytest ~= 8.4
-pytest-mock ~= 3.14
+pytest-mock ~= 3.15
 
 vsphere-automation-sdk @ git+https://github.com/vmware/vsphere-automation-sdk-python@v8.0.3.0
 
