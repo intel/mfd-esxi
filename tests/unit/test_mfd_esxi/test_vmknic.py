@@ -76,3 +76,14 @@ class TestVmknic:
     def test_discover_vxlan_vmk(self, host_esxcfg_vmknic_3):
         vmknics = Vmknic.discover(host_esxcfg_vmknic_3)
         assert len(vmknics) == 2
+
+    def test_sync_config(self, host):
+        vmknic = Vmknic(host, "vmk2")
+        vmknic._sync_config()
+        host.connection.execute_command.assert_called_with("vim-cmd hostsvc/firmware/sync_config")
+
+    def test_add_ip_calls_sync_config(self, host, mocker):
+        vmknic = Vmknic(host, "vmk2")
+        sync_mock = mocker.patch.object(vmknic, "_sync_config")
+        vmknic.add_ip("1.1.1.1/8")
+        sync_mock.assert_called_once()

@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Intel Corporation
+# Copyright (C) 2026 Intel Corporation
 # SPDX-License-Identifier: MIT
 """Support for vmkernel adapters."""
 
@@ -141,6 +141,10 @@ class Vmknic:
         command = f"esxcli network vswitch standard portgroup set -p {self.portgroup} -v {vlan}"
         self.owner.execute_command(command)
 
+    def _sync_config(self) -> None:
+        """Sync configuration to persist changes across reboots."""
+        self.owner.execute_command("vim-cmd hostsvc/firmware/sync_config")
+
     def add_ip(self, ip: Union["IPv4Interface", "IPv6Interface", str]) -> None:
         """
         Set IPv4 or add IPv6.
@@ -162,6 +166,7 @@ class Vmknic:
                     self.ips.remove(i)
                     break
         self.ips.append(ip)
+        self._sync_config()
 
     def del_ip(self, ip: Union["IPv4Interface", "IPv6Interface", str]) -> None:
         """
