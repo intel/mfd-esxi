@@ -14,6 +14,7 @@ from mfd_esxi.exceptions import (
 
 from com.vmware.nsx_policy.model_client import (
     HostTransportNode,
+    FabricHostNode,
     StandardHostSwitchSpec,
     VdsUplink,
     StandardHostSwitch,
@@ -70,33 +71,32 @@ class NsxHostTransportNode(NsxEntity):
 
         raise NsxResourceSetupError(f"Timeout during operation on Host Transport Node {self.name}")
 
-    @api_call
-    def add(  # noqa: C901
-        self,
-        timeout: int = 600,
-    ) -> None:
+    def _require_discovered_node(self) -> FabricHostNode:
         """
-        Add host transport node to NSX. Only hosts that are present in VCSA with VDS-es are supported.
+        Look up the host in NSX fabric discovery and return the discovered node content.
 
-        :param timeout: Maximum time add node can take to resolve.
+        :raises NsxResourceSetupError: if the host is not present in fabric discovery.
+        """
+        discovered_node = NsxFabricDiscoveredNode(self.name, self._connection).content
+        if discovered_node is None:
+            raise NsxResourceSetupError(f"Host transport node '{self.name}' not found in fabric discovery")
+        return discovered_node
+
+    @api_call
+    def add(self) -> None:
+        """
+        Validate that the host is visible in NSX fabric discovery.
+
+        Verifies the host is already registered as a transport node, or that it is present in
+        fabric discovery so that add_switch() can create the transport node with its first
+        HostSwitch in a single PATCH call (required for NSX 9.1+ compatibility).
+
+        Raises NsxResourceSetupError if the host is absent from fabric discovery.
         """
         if self.content is not None:
             return
 
-        discovered_node = NsxFabricDiscoveredNode(self.name, self._connection).content
-        if discovered_node is None:
-            # Standalone ESXi hosts are not supported. They need to be present in discovery
-            raise NsxResourceSetupError("Transport node missing in discovery")
-
-        switch_specs = StandardHostSwitchSpec(host_switches=[])
-        payload = HostTransportNode(
-            discovered_node_id_for_create=discovered_node.external_id,
-            display_name=self.name,
-            host_switch_spec=switch_specs,
-            description=f"Transport Node {self.name}",
-        )
-
-        self._patch(payload=payload, timeout=timeout)
+        self._require_discovered_node()
 
     @api_call
     def add_switch(  # noqa: C901
@@ -128,7 +128,15 @@ class NsxHostTransportNode(NsxEntity):
         """
         payload: HostTransportNode = self.content
         if payload is None:
-            raise MissingNsxEntity(f"Host Transport Node {self.name} is missing")
+            # NSX 9.1+ requires at least one HostSwitch at transport node creation time.
+            # add() skips bare node creation; the node is created here with the first
+            # switch already configured in a single PATCH call.
+            discovered_node = self._require_discovered_node()
+            payload = HostTransportNode(
+                discovered_node_id_for_create=discovered_node.external_id,
+                display_name=self.name,
+                description=f"Transport Node {self.name}",
+            )
 
         uplink_list = []
         for i in range(1, uplinks + 1):
@@ -190,12 +198,15 @@ class NsxHostTransportNode(NsxEntity):
         self._patch(payload=payload, timeout=timeout)
 
     @api_call
-    def delete_switches_return_uplink_profiles(self, timeout: int = 600) -> List[str]:
+    def get_uplink_profile_names(self) -> List[str]:
         """
-        Delete all host switches.
+        Return the uplink profile names referenced by all host switches on this transport node.
 
-        :param timeout: maximum time to resolve request
-        :return: list of their uplink profiles
+        :return: list of uplink profile names (empty list if the node has no content or no switches)
+
+        Note: this method is read-only. NSX 9.1+ rejects PATCH with an empty host_switches list
+        (error 9643), so switch removal is no longer performed here. Call delete() to fully
+        remove the transport node.
         """
         payload: HostTransportNode = self.content
         if payload is None or payload.host_switch_spec is None:
@@ -206,10 +217,6 @@ class NsxHostTransportNode(NsxEntity):
             for up in switch.host_switch_profile_ids:
                 if up.key == HostSwitchProfileTypeIdEntry.KEY_UPLINKHOSTSWITCHPROFILE:
                     names.append(up.value.split("/")[-1])
-
-        payload.host_switch_spec = StandardHostSwitchSpec(host_switches=[])
-
-        self._patch(payload=payload, timeout=timeout)
 
         return names
 
