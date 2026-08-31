@@ -2,6 +2,27 @@
 
 <!-- version list -->
 
+## v3.4.0 (2026-08-31)
+
+### Bug Fixes
+
+- [ESXi] Add support for ESXi 9.1
+  ([`e5d337a`](https://github.com/intel/mfd-esxi/commit/e5d337a63b97ca06a90ca729a476010d7c764c13))
+
+### Chores
+
+- Align CI
+  ([`11a0a2d`](https://github.com/intel/mfd-esxi/commit/11a0a2d60484933f85536950c465900b50fcf5b2))
+
+- Bump test dependencies
+  ([`d201c33`](https://github.com/intel/mfd-esxi/commit/d201c33bb4bcf1ad21a0e5b6110d2da42bb06338))
+
+### Features
+
+- Add configuration sync method & tests for IP addition
+  ([`cc031e1`](https://github.com/intel/mfd-esxi/commit/cc031e12ca41ca81f0a9dab8d5474859f03351dd))
+
+
 ## v3.3.0 (2026-01-08)
 
 ### Bug Fixes
